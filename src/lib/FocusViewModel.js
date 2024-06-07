@@ -20,18 +20,13 @@ export default class FocusViewModel {
           name: node.id,
           lngLat: node.data.l,
           isExternal: !!(link.data?.e),
-          id: node.data.id
+          id: node.data.id,
+          linkWeight: link.data.weight
         });
       });
       
       neighgbors.sort((a, b) => {
-        if (a.isExternal && !b.isExternal) {
-          return 1;
-        } else if (!a.isExternal && b.isExternal) {
-          return -1;
-        } else {
-          return 0;
-        }
+       return b.linkWeight-a.linkWeight
       });
 
       this.repos.value = neighgbors;

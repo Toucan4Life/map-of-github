@@ -65,6 +65,7 @@ function onRepoSelected(repo) {
   if (isSmallScreen.value) {
     // move panel to the bottom
     smallPreviewName.value = repo.text;
+    currentId.value = repo.id
     currentProject.value = null;
   } else {
     currentProject.value = repo.text;
@@ -201,7 +202,7 @@ async function listCurrentConnections() {
       ></type-ahead>
     </form>
     <transition name='slide-bottom'>
-      <small-preview v-if="smallPreviewName" :name="smallPreviewName" class="small-preview" @showFullPreview="showFullPreview()"></small-preview>
+      <small-preview v-if="smallPreviewName" :name="smallPreviewName" :id="currentId" class="small-preview" @showFullPreview="showFullPreview()"></small-preview>
     </transition>
     <div class="tooltip" v-if="tooltip" :style="{left: tooltip.left, top: tooltip.top, background: tooltip.background}">{{ tooltip.text }}</div>
     <div class="context-menu" v-if="contextMenu" :style="{left: contextMenu.left, top: contextMenu.top}">

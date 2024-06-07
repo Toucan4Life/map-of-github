@@ -1,7 +1,6 @@
 const hostName = window.location.hostname;
-const isDev = hostName !== 'anvaka.github.io';
-// const server = 'https://anvaka.github.io/map-of-github-data/';
-const server = 'http://localhost:3010/data';
+const isDev = hostName !== 'Toucan4Life.github.io';
+const server = isDev ? `http://${hostName}:3010/data` : 'https://Toucan4Life.github.io/graph-start/main/src/server/data';
 const version = '/v1';
 
 export default {

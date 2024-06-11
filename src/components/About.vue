@@ -3,72 +3,101 @@ import { defineEmits, onMounted, onBeforeUnmount, ref } from 'vue';
 import { getCachedCurrentUser, signOut } from '../lib/githubClient.js';
 import bus from '../lib/bus.js';
 
-const currentUser = ref(getCachedCurrentUser());
 const emit = defineEmits(['close']);
 
 function close() {
   emit('close');
 }
 
-function updateCurrentUser() {
-  currentUser.value = getCachedCurrentUser();
-}
-
-onMounted(() => {
-  bus.on('auth-changed', updateCurrentUser);
-});
-
-onBeforeUnmount(() => {
-  bus.off('auth-changed', updateCurrentUser);
-});
 
 
 </script>
 <template>
   <div>
     <div class='row'>
-      <h2>Map of GitHub</h2>
+      <h2>Map of Boardgames</h2>
       <!-- Icon copyright (c) 2013-2017 Cole Bemis: https://github.com/feathericons/feather/blob/master/LICENSE -->
-        <a href='#' @click.prevent='close' class='close-btn'>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-circle"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
-        </a>
+      <a href='#' @click.prevent='close' class='close-btn'>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          class="feather feather-x-circle">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="15" y1="9" x2="9" y2="15"></line>
+          <line x1="9" y1="9" x2="15" y2="15"></line>
+        </svg>
+      </a>
     </div>
     <div class="container">
       <p>
-        <img src="../../public/apple-touch-icon.png" alt="GitHub Map" class="map-image">
-        Each dot is a GitHub project. Two dots within the same cluster are 
-        usually close to each other if multiple users frequently gave stars to
-        both projects. The size of the dot indicates the number of stars the
-        project has received.
+        <!-- <img src="../../public/apple-touch-icon.png" alt="GitHub Map" class="map-image"> -->
+        Each dot is a boardgame. Two dots within the same cluster are
+        connected if multiple users frequently gave review to
+        both games. The size of the dot indicates the number of review the
+        game has received, the shape indicate the complexity and the color indicate the user's ratings
       </p>
       <p>
-        The map has more than <b>400,000</b> projects, clustered into <b>1,100</b> countries.
-        I'm looking for help from the community to improve the map. If you have
-        good names for countries, right click on a map and give them name, send a pull request to me.
+        The map has more than <b>4000</b> games, clustered into <b>8</b> countries.
       </p>
+      <h2>Legend</h2>
+      <div>
+        <p>
+          The colors are related to the user ratings. Each color is associated with 10% of the boardgames:
+        </p>
+        <ul class="legend">
+          <li><span style="background-color: #ff3c00"></span> &lt;=6.1</li>
+          <li><span style="background-color: #ff7800"></span> &lt;=6.4</li>
+          <li><span style="background-color: #ffb400"></span> &lt;=6.6</li>
+          <li><span style="background-color: #fff000"></span> &lt;=6.76</li>
+          <li><span style="background-color: #ffff00"></span> &lt;=6.9</li>
+          <li><span style="background-color: #c3ff00"></span> &lt;=7.03</li>
+          <li><span style="background-color: #87ff00"></span> &lt;=7.2</li>
+          <li><span style="background-color: #4bff00"></span> &lt;=7.46</li>
+          <li><span style="background-color: #0fff00"></span> &lt;=7.77</li>
+          <li><span style="background-color: #00ff00"></span> &gt;7.77</li>
+        </ul>
+      </div>
+      <p>
+        The shape are related to the bgg complexity of the game:
+      </p>
+      <ul class="legend">
+        <li><img src="../../circle.png" style="width:40px;height:auto;" alt="circle" class="map-image"> &lt;=2</li>
+        <li><img src="../../triangle.png" style="width:40px;height:auto;" alt="triangle" class="map-image"> &lt;=3</li>
+        <li><img src="../../diamond.png" style="width:40px;height:auto;" alt="diamond" class="map-image"> &lt;=4</li>
+        <li><img src="../../star.png" style="width:40px;height:auto;" alt="star" class="map-image"> &gt;4</li>
+      </ul>
+      
       <h2>Credits</h2>
       <p>
-        The cute logo of the project was created by my 9-years-old daughter <b>Louise Kashcha</b>,
-        who is an amazing artist and the biggest fan of cats I ever known. Thank you so much, Louise ❤️!
+        A huge thanks to <b>Anvaka</b> which inspired me to do this project and did the tools that enabled me to come
+        this far.
       </p>
-      <h2>Support</h2>
-      <p>
-        If you love this project, please consider supporting it on <a href="https://github.com/sponsors/anvaka" class='normal'>GitHub</a>.
-        Follow me on <a href="https://twitter.com/anvaka" class='normal'>Twitter</a> for updates. The source code is <a href="https://github.com/anvaka/map-of-github" class='normal'>here</a>.
-      </p>
-      <p>
-        Gratefully yours, <br>
-        <b>anvaka</b>
-      </p>
-    </div>
 
-    <div v-if="currentUser" class="user-info">
-      You are logged in as <b>{{currentUser.login}}</b> (<a href='#' @click.prevent="signOut" class="normal">log out</a>)
+      <p>
+        <b>Toucan4Life / Onixou</b>
+      </p>
     </div>
   </div>
 </template>
 
 <style scoped>
+/* basic positioning */
+.legend {
+  list-style: none;
+}
+
+.legend li {
+  float: left;
+  margin-right: 10px;
+}
+
+.legend span {
+  border: 1px solid #ccc;
+  float: left;
+  width: 12px;
+  height: 12px;
+  margin: 2px;
+}
+
 .row {
   display: flex;
   justify-content: space-between;
@@ -79,6 +108,7 @@ onBeforeUnmount(() => {
   margin: 8px 8px 0 8px;
   flex: 1;
 }
+
 .map-image {
   width: 64px;
   float: left;
@@ -96,11 +126,13 @@ onBeforeUnmount(() => {
   flex: 1;
   overflow-y: auto;
 }
+
 h4 {
   margin: 0;
   font-weight: normal;
   text-align: right;
 }
+
 .byline {
   margin: 0 8px 8px;
   font-size: 12px;
@@ -109,10 +141,12 @@ h4 {
 .user-info {
   margin: 8px;
 }
+
 p {
   margin: 0 0 8px 0;
   line-height: 1.5em;
 }
+
 b {
   font-weight: bold;
 }

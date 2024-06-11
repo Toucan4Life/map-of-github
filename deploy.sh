@@ -5,7 +5,7 @@ cd ./dist
 touch .nojekyll
 git init
 git add .
-git commit -m 'push to gh-pages'
-## Change the line below to deploy to your gh-pages
-git push --force git@github.com:anvaka/map-of-github.git main:gh-pages
+git commit -m 'push to gh-page'
+## Change the line below to deploy to your gh-page
+git push --force git@github.com:toucan4life/map-of-boardgames.git main:gh-page
 cd ../

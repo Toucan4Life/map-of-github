@@ -176,7 +176,10 @@ async function listCurrentConnections() {
       <a class="normal" aria-label="Made by Toucan4Life, inspired by @anvaka" target="_blank" href="https://github.com/Toucan4Life">
         Toucan4Life,
       </a>
-      inspired by @anvaka
+      inspired by
+      <a class="normal" aria-label="Made by Toucan4Life, inspired by @anvaka" target="_blank" href="https://github.com/Anvaka">
+        Anvaka,
+      </a>
     </div>
     <largest-repositories :repos="currentGroup" v-if="currentGroup"
       class="right-panel"

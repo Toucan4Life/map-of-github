@@ -6,7 +6,7 @@ let mapLoader = document.querySelector('.map-loading');
 if (!webglSupported()) {
   document.body.innerHTML = `<div class='no-webgl'>
     <h4>WebGL is not enabled :(</h4>
-    <p>This website needs <a href='https://en.wikipedia.org/wiki/WebGL' class='critical'>WebGL</a> to render a map of GitHub.
+    <p>This website needs <a href='https://en.wikipedia.org/wiki/WebGL' class='critical'>WebGL</a> to render a map of boardgames.
     </p> <p>
     You can try another browser. If the problem persists - very likely your video card isn't supported.
     </p>

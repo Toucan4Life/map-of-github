@@ -1,9 +1,10 @@
 <script setup>
-import {ref, onBeforeUnmount, onBeforeMount, computed} from 'vue';
+import { ref, onBeforeUnmount, onBeforeMount, computed } from 'vue';
 import TypeAhead from './components/Typeahead.vue';
 import GithubRepository from './components/GithubRepository.vue';
 import SmallPreview from './components/SmallPreview.vue';
-import About from './components/About.vue';
+import About from './components/About.vue'
+import advSearch from './components/AdvSearch.vue';
 import UnsavedChanges from './components/UnsavedChanges.vue';
 import LargestRepositories from './components/LargestRepositories.vue';
 import FocusRepository from './components/FocusRepository.vue';
@@ -15,12 +16,13 @@ import bus from './lib/bus'
 const SM_SCREEN_BREAKPOINT = 600;
 
 const sidebarVisible = ref(false);
-const currentProject = ref(''); 
-const currentId = ref(''); 
+const currentProject = ref('');
+const currentId = ref('');
 const smallPreviewName = ref('');
 const tooltip = ref(null);
 const contextMenu = ref(null);
 const aboutVisible = ref(false);
+const advSearchVisible = ref(false);
 const currentGroup = ref(null);
 const currentFocus = ref(null);
 const unsavedChangesVisible = ref(false);
@@ -55,7 +57,7 @@ function findProject(x) {
     zoom: 12,
   }
   window.mapOwner?.makeVisible(x.text, location, x.skipAnimation);
- // console.log(x)
+  // console.log(x)
   currentProject.value = x.text;
   currentId.value = x.id
 }
@@ -163,59 +165,61 @@ async function listCurrentConnections() {
     currentFocus.value = focusViewModel;
   }
 }
+async function search(parameters) {
+ await window.mapOwner?.highlightNode(parameters);
+}
 
 </script>
 
 <template>
   <div>
     <div class="unsaved-changes" v-if='hasUnsavedChanges'>
-      You have unsaved labels in local storage. <a href="#" @click.prevent="showUnsavedChanges()" class="normal">Click here</a> to see them.
+      You have unsaved labels in local storage. <a href="#" @click.prevent="showUnsavedChanges()" class="normal">Click
+        here</a> to see them.
     </div>
     <div class="made-by">
       Made by
-      <a class="normal" aria-label="Made by Toucan4Life, inspired by @anvaka" target="_blank" href="https://github.com/Toucan4Life">
+      <a class="normal" aria-label="Made by Toucan4Life, inspired by @anvaka" target="_blank"
+        href="https://github.com/Toucan4Life">
         Toucan4Life,
       </a>
       inspired by
-      <a class="normal" aria-label="Made by Toucan4Life, inspired by @anvaka" target="_blank" href="https://github.com/Anvaka">
+      <a class="normal" aria-label="Made by Toucan4Life, inspired by @anvaka" target="_blank"
+        href="https://github.com/Anvaka">
         Anvaka,
       </a>
     </div>
-    <largest-repositories :repos="currentGroup" v-if="currentGroup"
-      class="right-panel"
-      @selected="findProject"
-      @close="closeLargestRepositories()"
-    ></largest-repositories>
-    <focus-repository :vm="currentFocus" v-if="currentFocus"
-      class="right-panel"
-      @selected="findProject"
-      @close="closeFocusView()"
-    ></focus-repository>
-    <github-repository :name="currentProject" :id="currentId" v-if="currentProject" @listConnections="listCurrentConnections()"></github-repository>
+    <largest-repositories :repos="currentGroup" v-if="currentGroup" class="right-panel" @selected="findProject"
+      @close="closeLargestRepositories()"></largest-repositories>
+    <focus-repository :vm="currentFocus" v-if="currentFocus" class="right-panel" @selected="findProject"
+      @close="closeFocusView()"></focus-repository>
+    <github-repository :name="currentProject" :id="currentId" v-if="currentProject"
+      @listConnections="listCurrentConnections()"></github-repository>
     <form @submit.prevent="onSubmit" class="search-box" v-if="typeAheadVisible">
-      <type-ahead
-        placeholder="Find Project"
-        @menuClicked='aboutVisible = true'
-        @selected='findProject'
-        @beforeClear='closeSideBarOnSmallScreen'
-        @cleared='closeSideBarViewer'
-        @inputChanged='onTypeAheadInput'
-        :showClearButton="currentProject"
-        :query="currentProject"
-      ></type-ahead>
+      <type-ahead placeholder="Find Project" @menuClicked='aboutVisible = true'
+        @showAdvancedSearch='advSearchVisible = true' @selected='findProject' @beforeClear='closeSideBarOnSmallScreen'
+        @cleared='closeSideBarViewer' @inputChanged='onTypeAheadInput' :showClearButton="currentProject"
+        :query="currentProject"></type-ahead>
     </form>
     <transition name='slide-bottom'>
-      <small-preview v-if="smallPreviewName" :name="smallPreviewName" :id="currentId" class="small-preview" @showFullPreview="showFullPreview()"></small-preview>
+      <small-preview v-if="smallPreviewName" :name="smallPreviewName" :id="currentId" class="small-preview"
+        @showFullPreview="showFullPreview()"></small-preview>
     </transition>
-    <div class="tooltip" v-if="tooltip" :style="{left: tooltip.left, top: tooltip.top, background: tooltip.background}">{{ tooltip.text }}</div>
-    <div class="context-menu" v-if="contextMenu" :style="{left: contextMenu.left, top: contextMenu.top}">
-      <a href="#" v-for="(item, key) in contextMenu.items" :key="key" @click.prevent="doContextMenuAction(item)">{{ item.text }}</a>
+    <div class="tooltip" v-if="tooltip" :style="{ left: tooltip.left, top: tooltip.top, background: tooltip.background }">
+      {{ tooltip.text }}</div>
+    <div class="context-menu" v-if="contextMenu" :style="{ left: contextMenu.left, top: contextMenu.top }">
+      <a href="#" v-for="(item, key) in contextMenu.items" :key="key" @click.prevent="doContextMenuAction(item)">{{
+        item.text }}</a>
     </div>
     <transition name='slide-top'>
-      <unsaved-changes v-if='unsavedChangesVisible' @close='unsavedChangesVisible = false' class='changes-window'></unsaved-changes>
+      <unsaved-changes v-if='unsavedChangesVisible' @close='unsavedChangesVisible = false'
+        class='changes-window'></unsaved-changes>
     </transition>
     <transition name='slide-left'>
       <about v-if="aboutVisible" @close='aboutVisible = false' class="about"></about>
+    </transition>
+    <transition name='slide-left'>
+      <advSearch v-if="advSearchVisible" @search="search" @close='advSearchVisible = false' class="about"></advSearch>
     </transition>
   </div>
 </template>
@@ -230,6 +234,7 @@ async function listCurrentConnections() {
   font-size: 12px;
   color: #fff;
 }
+
 .made-by a {
   color: hsla(160, 100%, 37%, 1);
 }
@@ -245,6 +250,7 @@ async function listCurrentConnections() {
   left: 8px;
   width: calc(var(--side-panel-width) - 8px);
 }
+
 .tooltip {
   position: absolute;
   background: var(--color-background-soft);
@@ -269,6 +275,7 @@ async function listCurrentConnections() {
   overflow: hidden;
   border-left: 1px solid var(--color-border);
 }
+
 .unsaved-changes {
   position: absolute;
   top: 60px;
@@ -280,12 +287,16 @@ async function listCurrentConnections() {
   width: calc(var(--side-panel-width) - 8px);
 }
 
-.slide-top-enter-active, .slide-top-leave-active {
-  transition: opacity .3s cubic-bezier(0,0,0.58,1);
+.slide-top-enter-active,
+.slide-top-leave-active {
+  transition: opacity .3s cubic-bezier(0, 0, 0.58, 1);
 }
-.slide-top-enter, .slide-top-leave-to {
+
+.slide-top-enter,
+.slide-top-leave-to {
   opacity: 0;
 }
+
 .changes-window {
   position: fixed;
   transform: translate(-50%, -50%);
@@ -300,6 +311,7 @@ async function listCurrentConnections() {
   overflow-y: auto;
   max-height: 100%;
 }
+
 .context-menu {
   position: absolute;
   background: var(--color-background-soft);
@@ -312,6 +324,7 @@ async function listCurrentConnections() {
   display: flex;
   flex-direction: column;
 }
+
 .repo-viewer {
   position: absolute;
   left: 0;
@@ -322,18 +335,27 @@ async function listCurrentConnections() {
   background: var(--color-background);
   border-right: 1px solid var(--color-border);
 }
-.slide-bottom-enter-active, .slide-bottom-leave-active {
-  transition: transform .3s cubic-bezier(0,0,0.58,1);
+
+.slide-bottom-enter-active,
+.slide-bottom-leave-active {
+  transition: transform .3s cubic-bezier(0, 0, 0.58, 1);
 }
-.slide-bottom-enter, .slide-bottom-leave-to {
+
+.slide-bottom-enter,
+.slide-bottom-leave-to {
   transform: translateY(84px);
 }
-.slide-left-enter-active, .slide-left-leave-active {
-  transition: transform 150ms cubic-bezier(0,0,0.58,1);
+
+.slide-left-enter-active,
+.slide-left-leave-active {
+  transition: transform 150ms cubic-bezier(0, 0, 0.58, 1);
 }
-.slide-left-enter, .slide-left-leave-to {
+
+.slide-left-enter,
+.slide-left-leave-to {
   transform: translateX(-100%);
 }
+
 .small-preview {
   position: fixed;
   bottom: 0;
@@ -341,8 +363,9 @@ async function listCurrentConnections() {
   width: 100%;
   height: 84px;
   background: var(--color-background);
-  box-shadow: 0 -4px 4px rgba(0,0,0,0.42);
+  box-shadow: 0 -4px 4px rgba(0, 0, 0, 0.42);
 }
+
 .about {
   position: fixed;
   top: 0;
@@ -358,38 +381,46 @@ async function listCurrentConnections() {
 
 
 @media (max-width: 800px) {
-  .repo-viewer, .search-box, .right-panel {
+
+  .repo-viewer,
+  .search-box,
+  .right-panel {
     width: 45vw;
   }
+
   .search-box {
     margin: 0;
     left: 0;
   }
+
   .unsaved-changes {
     width: 45vw;
     left: 0;
     top: 48px
   }
 }
+
 @media (max-width: 600px) {
   .repo-viewer {
     width: 100%;
   }
+
   .search-box {
     left: 0;
     margin-top: 0;
     width: 100%;
   }
+
   .right-panel {
     width: 100%;
   }
+
   .neighbors-container {
     height: 30%;
     top: 70%;
     z-index: 2;
     border-top: 1px solid var(--color-border);
-    box-shadow: 0 -4px 4px rgba(0,0,0,0.42);
+    box-shadow: 0 -4px 4px rgba(0, 0, 0, 0.42);
   }
 }
-
 </style>

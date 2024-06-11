@@ -155,10 +155,10 @@ export default function createMap() {
   });
 
   map.on("click", (e) => {
-   // console.log("Clicked")
+    // console.log("Clicked")
     bus.fire("show-context-menu");
     const nearestCity = findNearestCity(e.point);
-   // console.log("Nearest city :" + JSON.stringify(nearestCity))
+    // console.log("Nearest city :" + JSON.stringify(nearestCity))
     if (!nearestCity) return;
     const repo = nearestCity.properties.label
     if (!repo) return;
@@ -179,7 +179,29 @@ export default function createMap() {
     clearHighlights,
     clearBorderHighlights,
     getPlacesGeoJSON,
-    getGroupIdAt
+    getGroupIdAt,
+    highlightNode
+  }
+
+  function highlightNode(searchParameters) {
+    let highlightedNodes = {
+      type: "FeatureCollection",
+      features: []
+    };
+
+    map.querySourceFeatures("points-source", {
+      sourceLayer: "points",
+      filter: [">=", ["to-number", ["get", 'complexity']], searchParameters.minWeight]
+    }).forEach(repo => {
+      highlightedNodes.features.push({
+        type: "Feature",
+        geometry: { type: "Point", coordinates: repo.geometry.coordinates },
+        properties: { color: primaryHighlightColor, name: repo.properties.label, background: "#ff0000", textSize: 1.2 }
+      });
+    });
+    console.log("nodes : " + JSON.stringify(highlightedNodes))
+    map.getSource("selected-nodes").setData(highlightedNodes);
+    map.redraw();
   }
 
   function getGroupIdAt(lat, lon) {
@@ -201,7 +223,7 @@ export default function createMap() {
 
   function showDetails(nearestCity) {
     const repo = nearestCity.properties.label
-   // console.log("showing details for :" + repo)
+    // console.log("showing details for :" + repo)
     if (!repo) return;
     const [lat, lon] = nearestCity.geometry.coordinates
     //console.log(nearestCity)
@@ -226,7 +248,7 @@ export default function createMap() {
           let v = {
             name: repo.properties.label,
             lngLat: repo.geometry.coordinates,
-            id:repo.properties.id
+            id: repo.properties.id
           }
           if (seen.has(repo.properties.label)) continue;
           seen.set(repo.properties.label, v);
@@ -276,9 +298,9 @@ export default function createMap() {
   }
 
   function drawBackgroundEdges(point, repo, ignoreExternal = true) {
-   // console.log("In drawBackgroundEdges")
+    // console.log("In drawBackgroundEdges")
     const bgFeature = getBackgroundNearPoint(point);
-   // console.log("bgFeature :" + JSON.stringify(bgFeature))
+    // console.log("bgFeature :" + JSON.stringify(bgFeature))
     if (!bgFeature) return;
     const groupId = bgFeature.id;
     //console.log("groupId :" + JSON.stringify(groupId))
@@ -308,8 +330,8 @@ export default function createMap() {
           lngLat
         });
       });
-    //  console.log('Repo : '+ JSON.stringify(repo))
-    //  console.log('Point : '+ JSON.stringify(point))
+      //  console.log('Repo : '+ JSON.stringify(repo))
+      //  console.log('Point : '+ JSON.stringify(point))
 
       groupGraph.forEachLink(link => {
         if (link.data?.e && ignoreExternal) return; // external;
@@ -521,27 +543,49 @@ function getDefaultStyle() {
           "icon-allow-overlap": true,
           "icon-ignore-placement": true,
           "paint": {
+            // "icon-color": [
+            //   "case",
+            //   [">=", ["to-number", ["get", 'ratings']], 7.77],
+            //   "#00ff00",
+            //   [">=", ["to-number", ["get", 'ratings']], 7.46],
+            //   "#0fff00",
+            //   [">=", ["to-number", ["get", 'ratings']], 7.2],
+            //   "#4bff00",
+            //   [">=", ["to-number", ["get", 'ratings']], 7.03],
+            //   "#87ff00",
+            //   [">=", ["to-number", ["get", 'ratings']], 6.9],
+            //   "#c3ff00",
+            //   [">=", ["to-number", ["get", 'ratings']], 6.76],
+            //   "#ffff00",
+            //   [">=", ["to-number", ["get", 'ratings']], 6.6],
+            //   "#fff000",
+            //   [">=", ["to-number", ["get", 'ratings']], 6.4],
+            //   "#ffb400",
+            //   [">=", ["to-number", ["get", 'ratings']], 6.1],
+            //   "#ff7800",
+            //   "#ff3c00"
+            // ],
             "icon-color": [
               "case",
               [">=", ["to-number", ["get", 'ratings']], 7.77],
-              "#00ff00",
+              "#00e9ff",
               [">=", ["to-number", ["get", 'ratings']], 7.46],
-              "#0fff00",
+              "#00f8d8",
               [">=", ["to-number", ["get", 'ratings']], 7.2],
-              "#4bff00",
+              "#00ff83",
               [">=", ["to-number", ["get", 'ratings']], 7.03],
-              "#87ff00",
+              "#62f25e",
               [">=", ["to-number", ["get", 'ratings']], 6.9],
-              "#c3ff00",
+              "#87e539",
               [">=", ["to-number", ["get", 'ratings']], 6.76],
-              "#ffff00",
+              "#a2d600",
               [">=", ["to-number", ["get", 'ratings']], 6.6],
-              "#fff000",
+              "#c3b700",
               [">=", ["to-number", ["get", 'ratings']], 6.4],
-              "#ffb400",
+              "#de9200",
               [">=", ["to-number", ["get", 'ratings']], 6.1],
-              "#ff7800",
-              "#ff3c00"
+              "#f36300",
+              "#ff0000"
             ],
             // "icon-opacity": [
             //   "interpolate",

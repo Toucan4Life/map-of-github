@@ -34,7 +34,7 @@ function copyJSON() {
   Here is the content of the `places.geojson` with your changes.
   <a href="#" class="critical" @click.prevent="copyJSON()" 
     :class="{'copy-notification': copiedTooltipVisible}">{{ copiedTooltipVisible ? 'Copied!' : 'Copy' }}</a> them to clipboard and paste them in 
-    <a href="https://github.com/anvaka/map-of-github-data/blob/main/v1/places.geojson" target="_blank" class="normal">the remote file</a>.
+    <a href="https://github.com/Toucan4Life/map-of-github-data/blob/main/v1/places.geojson" target="_blank" class="normal">the remote file</a>.
 </p>
 <pre>
 {{ geojson }}

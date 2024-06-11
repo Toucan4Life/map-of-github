@@ -65,7 +65,7 @@ function showErrorMessage(e) {
   document.body.innerHTML = `<div class='no-webgl'>
     <h4>Something went wrong :(</h4>
     <p>
-      Please try to reload the page. If the problem persists, please <a href='https://github.com/anvaka/map-of-github/issues' class='critical'>let me know</a>.
+      Please try to reload the page. If the problem persists, please <a href='https://github.com/Toucan4Life/map-of-github/issues' class='critical'>let me know</a>.
     </p>
     <p>
     The error message was: <pre class="error"></pre>
@@ -77,5 +77,5 @@ function showErrorMessage(e) {
 // Print friendly message to the viewer:
 console.log(`%c 👋 Hello there!`, 'font-size: 24px; font-weight: bold;');
 console.log('Thank you for checking out source code. You can read it here: ')
-console.log('https://github.com/anvaka/map-of-github');
+console.log('https://github.com/Toucan4Life/map-of-github');
 console.log('If you have any questions, please let me know');

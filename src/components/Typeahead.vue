@@ -3,43 +3,41 @@
     <a href="#" class='menu-opener' @click.prevent='menuClicked'>
       <img :src="currentUser.avatar_url" class="avatar" v-if="currentUser">
       <!-- Icon copyright (c) 2013-2017 Cole Bemis: https://github.com/feathericons/feather/blob/master/LICENSE -->
-      <svg v-else xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-  </a>
-    <input
-      ref='input' autofocus
-      type='text'
-      autocomplete='off'
-      autocorrect='off'
-      autocapitalize='off'
-      spellcheck='false'
-      :value='currentQuery' 
-      :placeholder='placeholder'
-      @input='handleInput'
-      @keydown="cycleTheList"
-    >
-    <a
-      type='submit'
-      class='search-submit'
-      href='#'
-      @click.prevent='clearSearch'
-      v-if='currentQuery || showClearButton'
-    >
-<!-- Icon copyright (c) 2013-2017 Cole Bemis: https://github.com/feathericons/feather/blob/master/LICENSE -->
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-circle">
-  <circle cx="12" cy="12" r="10"></circle>
-    <line x1="15" y1="9" x2="9" y2="15"></line>
-    <line x1="9" y1="9" x2="15" y2="15"></line>
-  </svg>
-</a>
+      <svg v-else xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        class="feather feather-info">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+    </a>
+    <a href="#" class='menu-opener' @click.prevent='showAdvancedSearch'>
+      <img :src="currentUser.avatar_url" class="avatar" v-if="currentUser">
+      <!-- Icon copyright (c) 2013-2017 Cole Bemis: https://github.com/feathericons/feather/blob/master/LICENSE -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        class="feather feather-more-vertical">
+        <circle cx="12" cy="12" r="1"></circle>
+        <circle cx="12" cy="5" r="1"></circle>
+        <circle cx="12" cy="19" r="1"></circle>
+      </svg>
+    </a>
+    <input ref='input' autofocus type='text' autocomplete='off' autocorrect='off' autocapitalize='off'
+      spellcheck='false' :value='currentQuery' :placeholder='placeholder' @input='handleInput' @keydown="cycleTheList">
+    <a type='submit' class='search-submit' href='#' @click.prevent='clearSearch' v-if='currentQuery || showClearButton'>
+      <!-- Icon copyright (c) 2013-2017 Cole Bemis: https://github.com/feathericons/feather/blob/master/LICENSE -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        class="feather feather-x-circle">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="15" y1="9" x2="9" y2="15"></line>
+        <line x1="9" y1="9" x2="15" y2="15"></line>
+      </svg>
+    </a>
     <ul v-if="showSuggestions" class="suggestions">
       <li v-for="(suggestion, index) in suggestions" :key="index">
-        <a
-          @click.prevent="pickSuggestion(suggestion)"
-          class="suggestion"
-          :class="{selected: suggestion.selected}"
-          href="#"
-          v-html="suggestion.html"
-        ></a>
+        <a @click.prevent="pickSuggestion(suggestion)" class="suggestion" :class="{ selected: suggestion.selected }"
+          href="#" v-html="suggestion.html"></a>
       </li>
     </ul>
 
@@ -48,7 +46,7 @@
         <span v-if="!loadingError">Downloading search index for letter <b>{{ currentQuery[0] }}</b>...</span>
         <div v-if="loadingError" class="loading-error">
           <div>Failed to get project completions:</div>
-          <pre>{{loadingError}}</pre>
+          <pre>{{ loadingError }}</pre>
         </div>
       </li>
     </ul>
@@ -114,6 +112,10 @@ export default {
       this.$emit('menuClicked');
     },
 
+    showAdvancedSearch() {
+      this.$emit('showAdvancedSearch');
+    },
+
     hideSuggestions() {
       this.showSuggestions = false;
       this.showLoading = false;
@@ -129,7 +131,9 @@ export default {
     focus() {
       this.$refs.input.focus();
     },
-
+    test(){
+      console.log("In test")
+    },
     pickSuggestion(suggestion) {
       this.currentQuery = suggestion.text;
       this.hideSuggestions();
@@ -137,7 +141,7 @@ export default {
     },
 
     clearSearch() {
-      let payload = {shouldProceed: true};
+      let payload = { shouldProceed: true };
       this.$emit('beforeClear', payload);
       if (!payload.shouldProceed) return;
 
@@ -164,7 +168,7 @@ export default {
         return;
       }
 
-      self.previous = window.setTimeout(function() {
+      self.previous = window.setTimeout(function () {
         var p = window.fuzzySearcher.find(self.currentQuery.toLowerCase());
 
         if (Array.isArray(p)) {
@@ -175,7 +179,7 @@ export default {
           self.loadingError = null;
           self.showLoading = true;
           p.then(
-            function(suggestions) {
+            function (suggestions) {
               if (suggestions === undefined) return; // resolution of cancelled promise
               self.showLoading = false;
               suggestions = suggestions || [];
@@ -183,7 +187,7 @@ export default {
               self.currentSelected = -1;
               self.showIfNeeded(suggestions && suggestions.length > 0);
             },
-            function(err) {
+            function (err) {
               self.loadingError = err;
             }
           );
@@ -249,13 +253,13 @@ function toOwnSuggestion(x) {
 </script>
 
 <style>
-
 img.avatar {
   width: 24px;
   height: 24px;
   border-radius: 50%;
   aspect-ratio: auto 24 / 24;
 }
+
 .ak-typeahead {
   height: 100%;
   flex: 1;
@@ -272,7 +276,8 @@ img.avatar {
   background: var(--color-background-soft);
 }
 
-.menu-opener:hover, .menu-opener:focus {
+.menu-opener:hover,
+.menu-opener:focus {
   background: var(--color-border-hover);
 }
 
@@ -290,7 +295,8 @@ img.avatar {
   outline: none;
 }
 
-.search-submit:hover, .search-submit:focus {
+.search-submit:hover,
+.search-submit:focus {
   background: var(--color-border-hover);
 }
 
@@ -313,7 +319,8 @@ img.avatar {
   font-weight: normal;
 }
 
-.suggestion:hover, .suggestion.selected {
+.suggestion:hover,
+.suggestion.selected {
   background-color: var(--color-border-hover);
   color: var(--color-text);
 }
@@ -352,7 +359,8 @@ input[type='text'] {
   color: var(--color-text);
 }
 
-input:focus, input:hover{
+input:focus,
+input:hover {
   background: var(--color-background-mute);
 }
 
@@ -363,6 +371,7 @@ input:focus {
 input::placeholder {
   color: var(--color-text);
 }
+
 .searching b {
   font-weight: bold;
 }

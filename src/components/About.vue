@@ -39,33 +39,39 @@ function close() {
         The map has more than <b>4000</b> games, clustered into <b>8</b> countries.
       </p>
       <h2>Legend</h2>
-      <div>
-        <p>
-          The colors are related to the user ratings. Each color is associated with 10% of the boardgames:
-        </p>
-        <ul class="legend">
-          <li><span style="background-color: #ff0000"></span> &lt;=6.1</li>
-          <li><span style="background-color: #f36300"></span> &lt;=6.4</li>
-          <li><span style="background-color: #de9200"></span> &lt;=6.6</li>
-          <li><span style="background-color: #c3b700"></span> &lt;=6.76</li>
-          <li><span style="background-color: #a2d600"></span> &lt;=6.9</li>
-          <li><span style="background-color: #87e539"></span> &lt;=7.03</li>
-          <li><span style="background-color: #62f25e"></span> &lt;=7.2</li>
-          <li><span style="background-color: #00ff83"></span> &lt;=7.46</li>
-          <li><span style="background-color: #00f8d8"></span> &lt;=7.77</li>
-          <li><span style="background-color: #00e9ff"></span> &gt;7.77</li>
-        </ul>
-      </div>
+
+      <p>
+        The colors are related to the user ratings. Each color is associated with 10% of the boardgames:
+      </p>
+
+      
+      <ul class="legend">
+        <li><span style="background-color: #ff0000"></span> &lt;=6.1</li>
+        <li><span style="background-color: #f36300"></span> &lt;=6.4</li>
+        <li><span style="background-color: #de9200"></span> &lt;=6.6</li>
+        <li><span style="background-color: #c3b700"></span> &lt;=6.76</li>
+        <li><span style="background-color: #a2d600"></span> &lt;=6.9</li>
+        <li><span style="background-color: #87e539"></span> &lt;=7.03</li>
+        <li><span style="background-color: #62f25e"></span> &lt;=7.2</li>
+        <li><span style="background-color: #00ff83"></span> &lt;=7.46</li>
+        <li><span style="background-color: #00f8d8"></span> &lt;=7.77</li>
+        <li><span style="background-color: #00e9ff"></span> &gt;7.77</li>
+      </ul>
+    
       <p>
         The shape are related to the bgg complexity of the game:
       </p>
+
       <ul class="legend">
-        <li><img src="../../public/circle.png" style="width:40px;height:auto;" alt="circle" class="map-image"> &lt;=2</li>
-        <li><img src="../../public/triangle.png" style="width:40px;height:auto;" alt="triangle" class="map-image"> &lt;=3</li>
-        <li><img src="../../public/diamond.png" style="width:40px;height:auto;" alt="diamond" class="map-image"> &lt;=4</li>
+        <li><img src="../../public/circle.png" style="width:40px;height:auto;" alt="circle" class="map-image"> &lt;=2
+        </li>
+        <li><img src="../../public/triangle.png" style="width:40px;height:auto;" alt="triangle" class="map-image">
+          &lt;=3</li>
+        <li><img src="../../public/diamond.png" style="width:40px;height:auto;" alt="diamond" class="map-image"> &lt;=4
+        </li>
         <li><img src="../../public/star.png" style="width:40px;height:auto;" alt="star" class="map-image"> &gt;4</li>
       </ul>
-      
+
       <h2>Credits</h2>
       <p>
         A huge thanks to <b>Anvaka</b> which inspired me to do this project and did the tools that enabled me to come
@@ -81,8 +87,10 @@ function close() {
 
 <style scoped>
 /* basic positioning */
+
 .legend {
   list-style: none;
+  margin-right: -10px;
 }
 
 .legend li {

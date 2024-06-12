@@ -9,12 +9,14 @@ function close() {
   emit('close');
 }
 
-function search(minW,maxW) {
-  emit('search', {minWeight:minW, maxWeight:maxW});
+function search(minW,maxW, minR, maxR) {
+  emit('search', {minWeight:minW, maxWeight:maxW, minRating: minR, maxRating: maxR});
 }
 
 const sliderMin = ref(1);
 const sliderMax = ref(5);
+const sliderMinR = ref(0);
+const sliderMaxR = ref(10);
 
 
 </script>
@@ -44,8 +46,12 @@ const sliderMax = ref(5);
         <h3>Game complexity: {{ sliderMin }} - {{ sliderMax }}</h3>
         <CustomMinMaxSlider :min="1" :max="5" :step="0.1" v-model:min-value="sliderMin" v-model:max-value="sliderMax" />
       </div>
+      <div class="slider-cont">
+        <h3>Game rating: {{ sliderMinR }} - {{ sliderMaxR }}</h3>
+        <CustomMinMaxSlider :min="0" :max="10" :step="0.1" v-model:min-value="sliderMinR" v-model:max-value="sliderMaxR" />
+      </div>
       <div class="actions row">
-        <a href="#" @click.prevent="search(sliderMin, sliderMax)">Search</a>
+        <a href="#" @click.prevent="search(sliderMin, sliderMax, sliderMinR, sliderMaxR)">Search</a>
       </div>
     </div>
   </div>

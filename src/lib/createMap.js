@@ -191,7 +191,12 @@ export default function createMap() {
 
     map.querySourceFeatures("points-source", {
       sourceLayer: "points",
-      filter: [">=", ["to-number", ["get", 'complexity']], searchParameters.minWeight]
+      filter: ["all",
+        [">=", ["to-number", ["get", 'complexity']], searchParameters.minWeight],
+        ["<=", ["to-number", ["get", 'complexity']], searchParameters.maxWeight],
+        [">=", ["to-number", ["get", 'ratings']], searchParameters.minRating],
+        ["<=", ["to-number", ["get", 'ratings']], searchParameters.maxRating]
+      ]
     }).forEach(repo => {
       highlightedNodes.features.push({
         type: "Feature",

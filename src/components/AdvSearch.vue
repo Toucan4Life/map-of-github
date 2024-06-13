@@ -3,22 +3,33 @@ import { defineEmits, onMounted, onBeforeUnmount, ref } from 'vue';
 import { getCachedCurrentUser, signOut } from '../lib/githubClient.js';
 import bus from '../lib/bus.js';
 import CustomMinMaxSlider from "./CustomMinMaxSlider.vue";
-const emit = defineEmits(['close','search']);
+const emit = defineEmits(['close', 'search']);
 
 function close() {
   emit('close');
 }
 
-function search(minW,maxW, minR, maxR) {
-  emit('search', {minWeight:minW, maxWeight:maxW, minRating: minR, maxRating: maxR});
+function search(minW, maxW, minR, maxR, minP, maxP, minPl, maxPl,pChoice) {
+  emit('search', {
+    minWeight: minW, maxWeight: maxW,
+    minRating: minR, maxRating: maxR,
+    minPlaytime: timescale[minP], maxPlaytime: timescale[maxP],
+    minPlayers: playersScale[minPl], playersScale: timescale[maxPl],
+    playerChoice:pChoice
+  });
 }
 
 const sliderMin = ref(1);
 const sliderMax = ref(5);
 const sliderMinR = ref(0);
 const sliderMaxR = ref(10);
-
-
+const sliderMinP = ref(0);
+const sliderMaxP = ref(16);
+const sliderMinPl = ref(0);
+const sliderMaxPl = ref(12);
+let timescale = [0, 1, 5, 15, 30, 45, 60, 90, 120, 180, 240, 480, 960, 1800, 3600, 7200, 12000]
+let playersScale = [1, 2, 3, 4, 5, 6, 7, 8, 10, 15, 20, 50, 100]
+let playersChoice = 0;
 </script>
 <template>
   <div>
@@ -36,22 +47,31 @@ const sliderMaxR = ref(10);
       </a>
     </div>
     <div class="container">
-      <!-- <p>
-        Each dot is a boardgame. Two dots within the same cluster are
-        connected if multiple users frequently gave review to
-        both games. The size of the dot indicates the number of review the
-        game has received, the shape indicate the complexity and the color indicate the user's ratings
-      </p> -->
+      <div class="slider-cont">
+        <h3>Game rating: {{ sliderMinR }} - {{ sliderMaxR }}</h3>
+        <CustomMinMaxSlider :min="0" :max="10" :step="0.1" v-model:min-value="sliderMinR"
+          v-model:max-value="sliderMaxR" />
+      </div>
       <div class="slider-cont">
         <h3>Game complexity: {{ sliderMin }} - {{ sliderMax }}</h3>
         <CustomMinMaxSlider :min="1" :max="5" :step="0.1" v-model:min-value="sliderMin" v-model:max-value="sliderMax" />
       </div>
       <div class="slider-cont">
-        <h3>Game rating: {{ sliderMinR }} - {{ sliderMaxR }}</h3>
-        <CustomMinMaxSlider :min="0" :max="10" :step="0.1" v-model:min-value="sliderMinR" v-model:max-value="sliderMaxR" />
+        <h3>Player count: {{ playersScale[sliderMinPl] }} - {{ playersScale[sliderMaxPl] }}</h3>
+        <div class="segmented-control" ref="segm">
+          <input id="radio1" name="segmented" type="radio" v-model="playersChoice" value="0" checked><label for="radio1">Theorical</label>
+          <input id="radio2" name="segmented" type="radio" v-model="playersChoice" value="1"><label for="radio2">Recommended</label>
+          <input id="radio3" name="segmented" type="radio" v-model="playersChoice" value="2"><label for="radio3">Best</label>
+        </div>
+        <CustomMinMaxSlider :min="0" :max="12" v-model:min-value="sliderMinPl" v-model:max-value="sliderMaxPl" />
+      </div>
+      <div class="slider-cont">
+        <h3>Game length (min): {{ timescale[sliderMinP] }} - {{ timescale[sliderMaxP] }}</h3>
+        <CustomMinMaxSlider :min="0" :max="16" v-model:min-value="sliderMinP" v-model:max-value="sliderMaxP" />
       </div>
       <div class="actions row">
-        <a href="#" @click.prevent="search(sliderMin, sliderMax, sliderMinR, sliderMaxR)">Search</a>
+        <a href="#"
+          @click.prevent="search(sliderMin, sliderMax, sliderMinR, sliderMaxR, sliderMinP, sliderMaxP, sliderMinP, sliderMaxP,playersChoice)">Search</a>
       </div>
     </div>
   </div>
@@ -140,6 +160,7 @@ input[type='text'] {
   background: var(--color-background-soft);
   color: var(--color-text);
 }
+
 .actions {
   border-top: 1px solid var(--color-border);
   margin-top: 8px;
@@ -149,6 +170,7 @@ input[type='text'] {
   height: 32px;
   align-items: stretch;
 }
+
 .actions a {
   align-items: center;
   display: flex;
@@ -156,5 +178,43 @@ input[type='text'] {
   padding: 0 8px;
   flex: 1;
   justify-content: center;
+}
+.segmented-control {
+  display: inline-flex;
+  
+  input[type="radio"] { display: none; }
+  
+  border-width: 2px;
+  
+  label {
+    border: border-width solid slategrey;
+    border-right: none;
+    padding: 4px 8px;
+    background: rgba(slategrey, .2);
+
+    /* text-transform: uppercase; */
+    color:#00704b;
+    font-size: 12px;
+    font-weight: bold;
+    
+    cursor: pointer;
+    
+    &:first-of-type {
+      border-top-left-radius: 6px;
+      border-bottom-left-radius: 6px;
+    }
+
+    &:last-of-type {
+      border-top-right-radius: 6px;
+      border-bottom-right-radius: 6px;
+      border-right: border-width solid slategrey;
+    }
+  }
+}
+
+.segmented-control input:checked + label {
+  background: slategrey;
+  color: white;
+  cursor: default;
 }
 </style>

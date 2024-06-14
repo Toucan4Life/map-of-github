@@ -17,6 +17,7 @@
     "ngraph.events": "^1.2.2",
     "ngraph.fromdot": "^7.0.0",
     "vue": "^3.2.47",
+    "vue-multiselect": "^3.0.0",
     "w-gl": "^0.21.0"
   },
   "devDependencies": {

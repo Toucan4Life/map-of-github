@@ -196,7 +196,7 @@ async function search(parameters) {
     <github-repository :name="currentProject" :id="currentId" v-if="currentProject"
       @listConnections="listCurrentConnections()"></github-repository>
     <form @submit.prevent="onSubmit" class="search-box" v-if="typeAheadVisible">
-      <type-ahead placeholder="Find Project" @menuClicked='aboutVisible = true'
+      <type-ahead placeholder="Find Game" @menuClicked='aboutVisible = true'
         @showAdvancedSearch='advSearchVisible = true' @selected='findProject' @beforeClear='closeSideBarOnSmallScreen'
         @cleared='closeSideBarViewer' @inputChanged='onTypeAheadInput' :showClearButton="currentProject"
         :query="currentProject"></type-ahead>

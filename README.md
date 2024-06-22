@@ -25,7 +25,7 @@ In the fifth phase we need to render the map. Unlike my previous projects, I did
 ended up using [maplibre](https://maplibre.org/). All I had to do was convert my data into GeoJSON format, generate tiles
 with [tippecanoe](https://github.com/mapbox/tippecanoe) and configure the browsing experience.
 ```
-My personal contribution was to retrieve the data from BGG, retro-engineer the process made by Anvaka (in languages and libraries that I never used), make the advanced search feature and add color and shape to the points in the map to convey more informations
+My personal contribution was to retrieve the data from BGG, retro-engineer the process made by Anvaka, make the advanced search feature and add color and shape to the points in the map to convey more informations
 ## Country names
 
 Country labels were generated with an educated guess, if you want to suggest betters one go for it !

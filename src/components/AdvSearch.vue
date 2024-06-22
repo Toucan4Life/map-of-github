@@ -12,18 +12,26 @@ function close() {
 }
 
 function search(minW, maxW, minR, maxR, minP, maxP, minPl, maxPl, pChoice) {
+  // console.log(JSON.stringify({
+  //   minWeight: minW, maxWeight: maxW,
+  //   minRating: minR, maxRating: maxR,
+  //   minPlaytime: timescale[minP], maxPlaytime: timescale[maxP],
+  //   minPlayers: playersScale[minPl], maxPlayers: playersScale[maxPl],
+  //   playerChoice: pChoice,
+  //   tags: selectedTags.value
+  // }))
   emit('search', {
     minWeight: minW, maxWeight: maxW,
     minRating: minR, maxRating: maxR,
     minPlaytime: timescale[minP], maxPlaytime: timescale[maxP],
-    minPlayers: playersScale[minPl], playersScale: timescale[maxPl],
+    minPlayers: playersScale[minPl], maxPlayers: playersScale[maxPl],
     playerChoice: pChoice,
-    tags: selectedCountries.value
+    tags: selectedTags.value
   });
 }
 
 function clearAll() {
-  selectedCountries.value = []
+  selectedTags.value = []
 }
 
 const sliderMin = ref(1);
@@ -31,21 +39,21 @@ const sliderMax = ref(5);
 const sliderMinR = ref(0);
 const sliderMaxR = ref(10);
 const sliderMinP = ref(0);
-const sliderMaxP = ref(16);
+const sliderMaxP = ref(13);
 const sliderMinPl = ref(0);
-const sliderMaxPl = ref(12);
-const selectedCountries = ref([]);
-let timescale = [0, 1, 5, 15, 30, 45, 60, 90, 120, 180, 240, 480, 960, 1800, 3600, 7200, 12000]
-let playersScale = [1, 2, 3, 4, 5, 6, 7, 8, 10, 15, 20, 50, 100]
+const sliderMaxPl = ref(9);
+const selectedTags = ref([]);
+let timescale = [0, 1, 5, 15, 30, 45, 60, 90, 120, 180, 240, 480, 960, 1800]
+let playersScale = [1, 2, 3, 4, 5, 6, 7, 8, 10, 15]
 let playersChoice = 0;
-let countries = ["charleroi", "liege", "nivelles", "anvers", "bxl"]
+let countries = ["toronto", "austin", "paris", "barcelona", "hanoi"]
 </script>
 
 <template>
 
   <div>
     <div class='row'>
-      <h2>Adv Search</h2>
+      <h2>Advanced Search</h2>
       <!-- Icon copyright (c) 2013-2017 Cole Bemis: https://github.com/feathericons/feather/blob/master/LICENSE -->
       <a href='#' @click.prevent='close' class='close-btn'>
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -77,18 +85,15 @@ let countries = ["charleroi", "liege", "nivelles", "anvers", "bxl"]
           <input id="radio3" name="segmented" type="radio" v-model="playersChoice" value="2"><label
             for="radio3">Best</label>
         </div>
-        <CustomMinMaxSlider :min="0" :max="12" v-model:min-value="sliderMinPl" v-model:max-value="sliderMaxPl" />
+        <CustomMinMaxSlider :min="0" :max="9" v-model:min-value="sliderMinPl" v-model:max-value="sliderMaxPl" />
       </div>
       <div class="slider-cont">
         <h3>Game length (min): {{ timescale[sliderMinP] }} - {{ timescale[sliderMaxP] }}</h3>
-        <CustomMinMaxSlider :min="0" :max="16" v-model:min-value="sliderMinP" v-model:max-value="sliderMaxP" />
+        <CustomMinMaxSlider :min="0" :max="13" v-model:min-value="sliderMinP" v-model:max-value="sliderMaxP" />
       </div>
-      <!-- <MultiSelect v-model="selectedCities" display="chip" :options="cities" optionLabel="name" filter
-        placeholder="Select Cities" :maxSelectedLabels="3" class="w-full md:w-80" /> -->
-      <div>
-        <!-- <link rel="stylesheet" href="https://unpkg.com/vue-multiselect/dist/vue-multiselect.min.css"> -->
+      <!-- <div>
         <label class="typo__label" for="ajax">Tags:</label>
-        <multiselect v-model="selectedCountries" id="ajax" placeholder="Type to search" open-direction="bottom"
+        <multiselect v-model="selectedTags" id="ajax" placeholder="Type to search" open-direction="bottom"
           :options="countries" :multiple="true" :searchable="true" :internal-search="true" :clear-on-select="false"
           :close-on-select="false" :options-limit="300" :limit="10" :max-height="600" :show-no-results="false"
           :hide-selected="true">
@@ -99,17 +104,17 @@ let countries = ["charleroi", "liege", "nivelles", "anvers", "bxl"]
             </span>
           </template>
           <template #clear="props">
-            <div class="multiselect__clear" v-if="selectedCountries.length"
+            <div class="multiselect__clear" v-if="selectedTags.length"
               @mousedown.prevent.stop="clearAll(props.search)"></div>
           </template>
           <template #noResult>
             <span>Oops! No elements found. Consider changing the search query.</span>
           </template>
         </multiselect>
-      </div>
+      </div> -->
       <div class="actions row">
         <a href="#"
-          @click.prevent="search(sliderMin, sliderMax, sliderMinR, sliderMaxR, sliderMinP, sliderMaxP, sliderMinP, sliderMaxP, playersChoice)">Search</a>
+          @click.prevent="search(sliderMin, sliderMax, sliderMinR, sliderMaxR, sliderMinP, sliderMaxP, sliderMinPl, sliderMaxPl, playersChoice)">Search</a>
       </div>
     </div>
   </div>

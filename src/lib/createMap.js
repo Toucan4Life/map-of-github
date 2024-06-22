@@ -189,14 +189,29 @@ export default function createMap() {
       features: []
     };
 
+    const selectedFilters = ["all",
+      [">=", ["to-number", ["get", 'complexity']], searchParameters.minWeight],
+      ["<=", ["to-number", ["get", 'complexity']], searchParameters.maxWeight],
+      [">=", ["to-number", ["get", 'ratings']], searchParameters.minRating],
+      ["<=", ["to-number", ["get", 'ratings']], searchParameters.maxRating],
+      [">=", ["to-number", ["get", 'min_time']], searchParameters.minPlaytime],
+      ["<=", ["to-number", ["get", 'max_time']], searchParameters.maxPlaytime]
+    ];
+    if (searchParameters.playerChoice == 0) {
+      selectedFilters.push([">=", ["to-number", ["get", 'min_players']], searchParameters.minPlayers])
+      selectedFilters.push(["<=", ["to-number", ["get", 'max_players']], searchParameters.maxPlayers])
+    } else if(searchParameters.playerChoice == 1) {
+      selectedFilters.push([">=", ["to-number", ["get", 'min_players_rec']], searchParameters.minPlayers])
+      selectedFilters.push(["<=", ["to-number", ["get", 'max_players_rec']], searchParameters.maxPlayers])
+    }
+    else{
+      selectedFilters.push([">=", ["to-number", ["get", 'min_players_best']], searchParameters.minPlayers])
+      selectedFilters.push(["<=", ["to-number", ["get", 'max_players_best']], searchParameters.maxPlayers])
+    }
+    // console.log(JSON.stringify(selectedFilters))
     map.querySourceFeatures("points-source", {
       sourceLayer: "points",
-      filter: ["all",
-        [">=", ["to-number", ["get", 'complexity']], searchParameters.minWeight],
-        ["<=", ["to-number", ["get", 'complexity']], searchParameters.maxWeight],
-        [">=", ["to-number", ["get", 'ratings']], searchParameters.minRating],
-        ["<=", ["to-number", ["get", 'ratings']], searchParameters.maxRating]
-      ]
+      filter: selectedFilters
     }).forEach(repo => {
       highlightedNodes.features.push({
         type: "Feature",
@@ -204,7 +219,7 @@ export default function createMap() {
         properties: { color: primaryHighlightColor, name: repo.properties.label, background: "#ff0000", textSize: 1.2 }
       });
     });
-    console.log("nodes : " + JSON.stringify(highlightedNodes))
+    // console.log("nodes : " + JSON.stringify(highlightedNodes))
     map.getSource("selected-nodes").setData(highlightedNodes);
     map.redraw();
   }
@@ -541,8 +556,8 @@ function getDefaultStyle() {
                 "interpolate",
                 ["linear"],
                 ["zoom"],
-                5, ["*", ["get", "size"], .0025],
-                23, ["*", ["get", "size"], 0.037],
+                5, ["+",["*", ["to-number",["get", "size"]], .0000025],0.15],
+                23, ["+",["*", ["to-number",["get", "size"]], 0.000037],0.15],
               ],
           },
           "icon-allow-overlap": true,

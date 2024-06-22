@@ -36,6 +36,9 @@ function close() {
         game has received, the shape indicate the complexity and the color indicate the user's ratings
       </p>
       <p>
+        Only games with over 500 ratings were taken into account for now, and clusters of less than 20 games have been dropped
+      </p>
+      <p>
         The map has more than <b>4000</b> games, clustered into <b>8</b> countries.
       </p>
       <h2>Legend</h2>

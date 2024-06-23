@@ -41,6 +41,9 @@ function close() {
       <p>
         The map has more than <b>4000</b> games, clustered into <b>11</b> countries.
       </p>
+      <p>
+        The code for this project can be found <a href=" https://github.com/Toucan4Life/map-of-boardgames" class='normal'>here</a>
+      </p>
       <h2>Legend</h2>
 
       <p>
